@@ -1,0 +1,13 @@
+package ${package_name}.api;
+
+import com.camile.common.base.Service;
+import ${package_name}.dao.model.${model};
+import ${package_name}.dao.model.${model}Example;
+
+/**
+* ${model}Service接口
+* Created by lizhihui on ${ctime}.
+*/
+public interface ${model}Service extends Service<${model}, ${model}Example> {
+
+}

@@ -1,0 +1,29 @@
+package ${package_name}.service.impl;
+
+import com.camile.common.annotation.InitService;
+import com.camile.common.base.ServiceImpl;
+import ${package_name}.dao.mapper.${model}Mapper;
+import ${package_name}.dao.model.${model};
+import ${package_name}.dao.model.${model}Example;
+import ${package_name}.api.${model}Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+* ${model}Service实现
+* Created by lizhihui on ${ctime}.
+*/
+@Service
+@Transactional
+@InitService
+public class ${model}ServiceImpl extends ServiceImpl<${model}Mapper, ${model}, ${model}Example> implements ${model}Service {
+
+    private static Logger _log = LoggerFactory.getLogger(${model}ServiceImpl.class);
+
+    @Autowired
+    ${model}Mapper ${mapper}Mapper;
+
+}
