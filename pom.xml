@@ -23,6 +23,7 @@
         <module>camile-api</module>
         <module>camile-dao</module>
         <module>camile-web</module>
+        <module>camile-service</module>
     </modules>
 
     <dependencyManagement>

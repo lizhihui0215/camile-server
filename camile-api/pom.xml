@@ -19,11 +19,16 @@
     </properties>
     
     <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>com.camile</groupId>-->
+            <!--<artifactId>camile-service</artifactId>-->
+            <!--<version>1.0-SNAPSHOT</version>-->
+            <!--<type>jar</type>-->
+            <!--<scope> provided</scope>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.camile</groupId>
             <artifactId>camile-dao</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
         </dependency>
     </dependencies>
 

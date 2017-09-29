@@ -15,16 +15,16 @@
           http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- 引入jdbc配置文件 -->
-    <!--<context:property-placeholder location="classpath:jdbc.properties" />-->
-    <!-- 配置进行解密  -->
-    <bean id="propertyConfigurer" class="com.camile.common.plugin.EncryptPropertyPlaceholderConfigurer">
-        <property name="locations">
-            <list>
-                <value>classpath:jdbc.properties</value>
-                <value>classpath:redis.properties</value>
-            </list>
-        </property>
-    </bean>
+    <context:property-placeholder location="classpath:jdbc.properties" />
+     <!--配置进行解密-->
+    <!--<bean id="propertyConfigurer" class="com.camile.common.plugin.EncryptPropertyPlaceholderConfigurer">-->
+        <!--<property name="locations">-->
+            <!--<list>-->
+                <!--<value>classpath:jdbc.properties</value>-->
+                <!--<value>classpath:redis.properties</value>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
 
     <!-- 主库数据源 -->
     <bean id="masterDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
@@ -84,11 +84,11 @@
         <property name="targetDataSources">
             <map key-type="java.lang.String">
                 <!-- 可配置多个数据源 -->
-                <entry value-ref="masterDataSource" key="masterDataSource"></entry>
-                <entry value-ref="slaveDataSource" key="slaveDataSource"></entry>
+                <entry value-ref="masterDataSource" key="masterDataSource"/>
+                <entry value-ref="slaveDataSource" key="slaveDataSource"/>
             </map>
         </property>
-        <property name="defaultTargetDataSource" ref="masterDataSource"></property>
+        <property name="defaultTargetDataSource" ref="masterDataSource"/>
     </bean>
 
     <!-- 为Mybatis创建SqlSessionFactory，同时指定数据源 -->

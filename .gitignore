@@ -161,3 +161,8 @@ typings/
 
 /.idea
 
+camile-api/camile-api.iml
+camile-common/camile-common.iml
+camile-dao/camile-dao.iml
+camile-server.iml
+camile-web/camile-web.iml

@@ -16,11 +16,11 @@
 
 	<!-- 装载自定义bean -->
 	<context:component-scan base-package="**.*" use-default-filters="false">
-		<context:include-filter type="assignable" expression="com.camile.common.base.Interface"></context:include-filter>
+		<context:include-filter type="assignable" expression="com.camile.common.base.Interface"/>
 	</context:component-scan>
 
 	<!-- 启动时初始化Spring上下文环境工具类 -->
-	<bean id="springContextUtil" class="com.camile.common.util.SpringContextUtil"></bean>
+	<bean id="springContextUtil" class="com.camile.common.util.SpringContextUtil"/>
 
 	<!-- 启动任务注解 -->
 	<task:annotation-driven />
