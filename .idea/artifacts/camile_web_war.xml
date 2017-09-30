@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="camile-web:war">
+    <output-path>$PROJECT_DIR$/camile-web/target</output-path>
+    <root id="archive" name="camile-web-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="camile-web:war exploded" />
+    </root>
+  </artifact>
+</component>

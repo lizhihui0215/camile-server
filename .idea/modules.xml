@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/camile-api/camile-api.iml" filepath="$PROJECT_DIR$/camile-api/camile-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/camile-common/camile-common.iml" filepath="$PROJECT_DIR$/camile-common/camile-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/camile-dao/camile-dao.iml" filepath="$PROJECT_DIR$/camile-dao/camile-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/camile-server.iml" filepath="$PROJECT_DIR$/camile-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/camile-service/camile-service.iml" filepath="$PROJECT_DIR$/camile-service/camile-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/camile-web/camile-web.iml" filepath="$PROJECT_DIR$/camile-web/camile-web.iml" />
+    </modules>
+  </component>
+</project>
