@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-public class CmUserExample implements Serializable {
+public class UserExample implements Serializable {
     protected String orderByClause;
 
     protected boolean distinct;
@@ -15,7 +15,7 @@ public class CmUserExample implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public CmUserExample() {
+    public UserExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

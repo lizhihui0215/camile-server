@@ -3,7 +3,7 @@ package com.camile.dao.model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class CmUser implements Serializable {
+public class User implements Serializable {
     /**
      * 主键
      *
@@ -171,7 +171,7 @@ public class CmUser implements Serializable {
         if (getClass() != that.getClass()) {
             return false;
         }
-        CmUser other = (CmUser) that;
+        User other = (User) that;
         return (this.getUuid() == null ? other.getUuid() == null : this.getUuid().equals(other.getUuid()))
             && (this.getUsername() == null ? other.getUsername() == null : this.getUsername().equals(other.getUsername()))
             && (this.getPassword() == null ? other.getPassword() == null : this.getPassword().equals(other.getPassword()))

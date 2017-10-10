@@ -1,46 +1,51 @@
 package com.camile.common.base;
 
+import com.camile.common.result.Result;
+
 /**
  * 响应结果
  * @param <T>
  */
 public class Response<T> {
-    private boolean success;
+    private int code;
 
     private String message;
 
     private T results;
 
-    public Response() {
-        this.success = true;
+    public Response(Result result) {
+        this.code = result.getCode();
+        this.message = result.getMessage();
+        this.results = (T) result.getData();
     }
 
-    public boolean getSuccess() {
-        return success;
+    public Response(int code, String message, T results) {
+        this.code = code;
+        this.message = message;
+        this.results = results;
     }
 
-    public Response<T> setSuccess(boolean success) {
-        if (success) { this.message = null; }
-        this.success = success;
-        return this;
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMessage() {
         return message;
     }
 
-    public Response<T> setMessage(String message) {
+    public void setMessage(String message) {
         this.message = message;
-        return this;
     }
 
     public T getResults() {
         return results;
     }
 
-    public Response<T> setResults(T results) {
+    public void setResults(T results) {
         this.results = results;
-        this.message = null;
-        return this;
     }
 }

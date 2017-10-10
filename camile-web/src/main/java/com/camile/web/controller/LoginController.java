@@ -1,47 +1,85 @@
 package com.camile.web.controller;
-
-import com.camile.api.CmUserService;
+import com.camile.api.UserService;
 import com.camile.common.base.Controller;
 import com.camile.common.base.Response;
-import com.camile.dao.model.CmUser;
-import com.camile.dao.model.CmUserExample;
+import com.camile.common.result.LoginResult;
+import com.camile.common.util.RedisUtil;
+import com.camile.dao.model.User;
+import com.camile.dao.model.UserExample;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/login")
+@Api(value = "登录", description = "用户认证相关操作！")
 public class LoginController extends Controller {
     private static Logger _log = LoggerFactory.getLogger(LoginController.class);
 
+    // 全局会话key
+    private final static String CAMILE_SERVER_SESSION_ID = "camile-server-session-id";
+    // 全局会话key列表
+    private final static String CAMILE_SERVER_SESSION_IDS = "camile-server-session-ids";
+    // code key
+    private final static String CAMILE_SERVER_CODE = "camile-server-code";
+
+    private final UserService userService;
+
     @Autowired
-    private CmUserService userService;
+    public LoginController(UserService userService) {
+        this.userService = userService;
+    }
 
+    @ApiOperation(value = "登录")
     @RequestMapping("/auth")
-    public Response<CmUser> login(@RequestParam String username, @RequestParam String password) {
+    public Response<User> login(@RequestParam String username, @RequestParam String password, @RequestParam boolean remember) {
 
-        CmUserExample cmUserExample = new CmUserExample();
-        cmUserExample.createCriteria().andUsernameEqualTo(username).andPasswordEqualTo(password);
+        if (StringUtils.isBlank(username)) return new Response<>(LoginResult.EMPTY_USERNAME);
+        if (StringUtils.isBlank(password)) return new Response<>(LoginResult.EMPTY_PASSWORD);
 
-        CmUser cmUser = this.userService.selectFirstByExample(cmUserExample);
+        Subject subject = SecurityUtils.getSubject();
+        Session session = subject.getSession();
+        String sessionId = session.getId().toString();
+        String hasCode = (String) RedisUtil.get(CAMILE_SERVER_SESSION_ID + "_" + session);
 
-        Response<CmUser> response = new Response<>();
+        if (StringUtils.isBlank(hasCode)) {
+            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
+            usernamePasswordToken.setRememberMe(remember);
 
-        response.setSuccess(cmUser == null);
+            try {
+                subject.login(usernamePasswordToken);
+            }catch (UnknownAccountException e) {
+                return new Response<>(LoginResult.INVALID_USERNAME);
+            }catch (IncorrectCredentialsException e) {
+                return new Response<>(LoginResult.INVALID_PASSWORD);
+            }catch (LockedAccountException e) {
+                return new Response<>(LoginResult.INVALID_ACCOUNT);
+            }
 
-        if (cmUser == null) {
-            response.setMessage("用户不存在，或密码错误！");
+            // 全局会话sessionId列表，供会话管理
+            RedisUtil.lpush(CAMILE_SERVER_SESSION_IDS, sessionId.toString());
+
+            String code = UUID.randomUUID().toString();
+            RedisUtil.set(CAMILE_SERVER_SESSION_ID + "_" + sessionId, code, (int) subject.getSession().getTimeout() / 1000);
         }
 
-        response.setResults(cmUser);
-
-        return response;
+        User user = (User) session.getAttribute("user");
+        return new Response<>(LoginResult.SUCCESS(user));
     }
 
 }

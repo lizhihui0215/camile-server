@@ -15,7 +15,7 @@
           http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- 引入jdbc配置文件 -->
-    <context:property-placeholder location="classpath:jdbc.properties" />
+    <context:property-placeholder location="classpath:jdbc.properties" ignore-unresolvable="true"  />
      <!--配置进行解密-->
     <!--<bean id="propertyConfigurer" class="com.camile.common.plugin.EncryptPropertyPlaceholderConfigurer">-->
         <!--<property name="locations">-->

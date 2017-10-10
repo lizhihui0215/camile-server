@@ -61,6 +61,6 @@
         <javaClientGenerator targetPackage="com.camile.dao.mapper" targetProject="/Users/lizhihui/Workspace/camile-server/camile-dao/src/main/java" type="XMLMAPPER" />
 
         <!-- 需要映射的表 -->
-                                    <table tableName="cm_user" domainObjectName="CmUser"></table>
+                                    <table tableName="cm_user" domainObjectName="User"></table>
                         </context>
 </generatorConfiguration>

@@ -119,8 +119,6 @@
             </plugin>
         </plugins>
     </build>
-
-
     <dependencies>
         <dependency>
             <groupId>com.camile</groupId>
@@ -129,5 +127,4 @@
         </dependency>
 
     </dependencies>
-
 </project>

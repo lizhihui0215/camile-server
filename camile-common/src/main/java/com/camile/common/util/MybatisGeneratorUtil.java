@@ -1,6 +1,7 @@
 package com.camile.common.util;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
@@ -34,6 +35,7 @@ public class MybatisGeneratorUtil {
      * @param database      数据库
      * @param table_prefix  表前缀
      * @param package_name  包名
+     * @param isIncludeTablePrifix
      */
     public static void generator(
             String jdbc_driver,
@@ -45,7 +47,8 @@ public class MybatisGeneratorUtil {
             String database,
             String table_prefix,
             String package_name,
-            Map<String, String> last_insert_id_tables) throws Exception{
+            Map<String, String> last_insert_id_tables,
+            boolean isIncludeTablePrifix) throws Exception{
 
         generatorConfig_vm = MybatisGeneratorUtil.class.getResource(generatorConfig_vm).getPath();//.replaceFirst("/", "");
         service_vm = MybatisGeneratorUtil.class.getResource(service_vm).getPath();//.replaceFirst("/", "");
@@ -70,8 +73,10 @@ public class MybatisGeneratorUtil {
             for (Map map : result) {
                 System.out.println(map.get("TABLE_NAME"));
                 table = new HashMap<>();
-                table.put("table_name", map.get("TABLE_NAME"));
-                table.put("model_name", lineToHump(ObjectUtils.toString(map.get("TABLE_NAME"))));
+                String table_name = ObjectUtils.toString(map.get("TABLE_NAME"));
+                table.put("table_name", table_name);
+                String model_name = getGetModelName(isIncludeTablePrifix, table_name, table_prefix);
+                table.put("model_name", model_name);
                 tables.add(table);
             }
             jdbcUtil.release();
@@ -83,7 +88,7 @@ public class MybatisGeneratorUtil {
             context.put("generator_javaClientGenerator_targetPackage", package_name + ".dao.mapper");
             context.put("targetProject", targetProject);
             context.put("targetProject_sqlMap", targetProject_sqlMap);
-            context.put("generator_jdbc_password", AESUtil.AESDecode(jdbc_password));
+            context.put("generator_jdbc_password", jdbc_password);
             context.put("last_insert_id_tables", last_insert_id_tables);
             VelocityUtil.generate(generatorConfig_vm, generatorConfig_xml, context);
             // 删除旧代码
@@ -113,39 +118,25 @@ public class MybatisGeneratorUtil {
         String servicePath = basePath + rootModule + "/" + module + "-api" + "/src/main/java/" + package_name.replaceAll("\\.", "/") + "/api";
         String serviceImplPath = basePath + rootModule + "/" + module + "-service" + "/src/main/java/" + package_name.replaceAll("\\.", "/") + "/service/impl";
         for (int i = 0; i < tables.size(); i++) {
-            String model = lineToHump(ObjectUtils.toString(tables.get(i).get("table_name")));
+            String model = getGetModelName(isIncludeTablePrifix, ObjectUtils.toString(tables.get(i).get("table_name")), table_prefix);
             String service = servicePath + "/" + model + "Service.java";
             String serviceMock = servicePath + "/" + model + "ServiceMock.java";
             String serviceImpl = serviceImplPath + "/" + model + "ServiceImpl.java";
             // 生成service
             File serviceFile = new File(service);
             if (!serviceFile.exists()) {
-                VelocityContext context = new VelocityContext();
-                context.put("package_name", package_name);
-                context.put("model", model);
-                context.put("ctime", ctime);
-                VelocityUtil.generate(service_vm, service, context);
-                System.out.println(service);
+                generateVelocity(package_name, ctime, model, service, service_vm, null);
             }
             // 生成serviceMock
             File serviceMockFile = new File(serviceMock);
             if (!serviceMockFile.exists()) {
-                VelocityContext context = new VelocityContext();
-                context.put("package_name", package_name);
-                context.put("model", model);
-                context.put("ctime", ctime);
-                VelocityUtil.generate(serviceMock_vm, serviceMock, context);
-                System.out.println(serviceMock);
+                generateVelocity(package_name, ctime, model, serviceMock, serviceMock_vm, null);
             }
             // 生成serviceImpl
             File serviceImplFile = new File(serviceImpl);
             if (!serviceImplFile.exists()) {
-                VelocityContext context = new VelocityContext();
-                context.put("package_name", package_name);
-                context.put("model", model);
-                context.put("mapper", StringUtil.toLowerCaseFirstOne(model));
-                context.put("ctime", ctime);
-                VelocityUtil.generate(serviceImpl_vm, serviceImpl, context);
+                String mapper = StringUtil.toLowerCaseFirstOne(model);
+                generateVelocity(package_name, ctime, model, serviceImpl ,serviceImpl_vm, mapper);
                 System.out.println(serviceImpl);
             }
         }
@@ -153,6 +144,25 @@ public class MybatisGeneratorUtil {
 
         System.out.println("========== 开始生成Controller ==========");
         System.out.println("========== 结束生成Controller ==========");
+    }
+
+    private static void generateVelocity(String package_name, String ctime, String model, String service, String service_vm, String mapper) throws Exception {
+        VelocityContext context = new VelocityContext();
+        context.put("package_name", package_name);
+        context.put("model", model);
+        context.put("ctime", ctime);
+        if (StringUtils.isNotBlank(mapper)) context.put("mapper", mapper);
+        VelocityUtil.generate(service_vm, service, context);
+        System.out.println(service);
+    }
+
+    private static String getGetModelName(boolean isIncludeTablePrifix, String tableName, String tablePrifix) {
+        String modelName = "";
+        if (isIncludeTablePrifix)
+            modelName = lineToHump(ObjectUtils.toString(tableName));
+        else
+            modelName = lineToHump(tableName.substring(tablePrifix.length(), tableName.length()));
+        return modelName;
     }
 
     // 递归删除非空文件夹
