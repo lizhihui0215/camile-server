@@ -5,7 +5,6 @@ import com.camile.common.base.Response;
 import com.camile.common.result.LoginResult;
 import com.camile.common.util.RedisUtil;
 import com.camile.dao.model.User;
-import com.camile.dao.model.UserExample;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
@@ -19,15 +18,15 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/login")
-@Api(value = "登录", description = "用户认证相关操作！")
+@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@Api(value = "login", description = "用户认证相关操作！", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class LoginController extends Controller {
     private static Logger _log = LoggerFactory.getLogger(LoginController.class);
 
@@ -46,7 +45,7 @@ public class LoginController extends Controller {
     }
 
     @ApiOperation(value = "登录")
-    @RequestMapping("/auth")
+    @PostMapping(value = "/auth")
     public Response<User> login(@RequestParam String username, @RequestParam String password, @RequestParam boolean remember) {
 
         if (StringUtils.isBlank(username)) return new Response<>(LoginResult.EMPTY_USERNAME);
@@ -55,7 +54,7 @@ public class LoginController extends Controller {
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
         String sessionId = session.getId().toString();
-        String hasCode = (String) RedisUtil.get(CAMILE_SERVER_SESSION_ID + "_" + session);
+        String hasCode = RedisUtil.get(CAMILE_SERVER_SESSION_ID + "_" + session);
 
         if (StringUtils.isBlank(hasCode)) {
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
@@ -72,7 +71,7 @@ public class LoginController extends Controller {
             }
 
             // 全局会话sessionId列表，供会话管理
-            RedisUtil.lpush(CAMILE_SERVER_SESSION_IDS, sessionId.toString());
+            RedisUtil.lpush(CAMILE_SERVER_SESSION_IDS, sessionId);
 
             String code = UUID.randomUUID().toString();
             RedisUtil.set(CAMILE_SERVER_SESSION_ID + "_" + sessionId, code, (int) subject.getSession().getTimeout() / 1000);
@@ -80,6 +79,16 @@ public class LoginController extends Controller {
 
         User user = (User) session.getAttribute("user");
         return new Response<>(LoginResult.SUCCESS(user));
+    }
+
+    @ApiOperation(value = "退出登录")
+    @GetMapping(value = "/logout")
+    public Response<Void> logout(HttpServletRequest request) {
+        // shiro退出登录
+        SecurityUtils.getSubject().logout();
+        // 跳回原地址
+
+        return new Response<>(LoginResult.SUCCESS(null));
     }
 
 }

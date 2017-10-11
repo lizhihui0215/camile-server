@@ -5,7 +5,7 @@ package com.camile.common.result;
  */
 
 public class Result {
-    public static final Result FAILED = new Result(1001, "failed");
+    private static final int GLOABLE_EXCEPTION = 0x1;
 
     private int code;
     private String message;
@@ -16,10 +16,18 @@ public class Result {
         this.message = message;
     }
 
-    public final static Result SUCCESS(Object obj) {
+    public static Result SUCCESS(Object obj) {
         Result success = new Result(1001, "success");
         success.data = obj;
         return success;
+    }
+
+    public static Result FAILED(int code, String message) {
+        return new Result(code, message);
+    }
+
+    public static Result FAILED(String message) {
+        return Result.FAILED(GLOABLE_EXCEPTION, message);
     }
 
     public int getCode() {

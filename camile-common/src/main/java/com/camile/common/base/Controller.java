@@ -1,5 +1,7 @@
 package com.camile.common.base;
 
+import com.camile.common.result.LoginResult;
+import com.camile.common.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,7 +25,7 @@ public class Controller {
      * @param exception
      */
     @ExceptionHandler
-    public String exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception exception) {
+    public Response<Void> exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception exception) {
         _log.error("统一异常处理：", exception);
         request.setAttribute("ex", exception);
         if (null != request.getHeader("X-Requested-With") && request.getHeader("X-Requested-With").equalsIgnoreCase("XMLHttpRequest")) {
@@ -37,6 +39,7 @@ public class Controller {
 //        if (exception instanceof InvalidSessionException) {
 //            return "/error";
 //        }
-        return "/error";
+
+        return new Response<>(Result.FAILED(exception.getLocalizedMessage()));
     }
 }
