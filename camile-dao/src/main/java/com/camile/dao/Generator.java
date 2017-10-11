@@ -25,7 +25,7 @@ public class Generator {
 	// 需要insert后返回主键的表配置，key:表名,value:主键名
 	private static Map<String, String> LAST_INSERT_ID_TABLES = new HashMap<>();
 	static {
-
+        LAST_INSERT_ID_TABLES.put("cm_user", "uuid");
 	}
 
 	/**

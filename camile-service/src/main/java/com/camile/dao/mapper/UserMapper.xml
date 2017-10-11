@@ -4,13 +4,13 @@
   <resultMap id="BaseResultMap" type="com.camile.dao.model.User">
     <id column="uuid" jdbcType="VARCHAR" property="uuid" />
     <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="age" jdbcType="INTEGER" property="age" />
     <result column="brithday" jdbcType="DATE" property="brithday" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -71,7 +71,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    uuid, username, password, name, nickname, age, brithday, email, phone
+    uuid, username, name, nickname, age, brithday, email, phone, password
   </sql>
   <select id="selectByExample" parameterType="com.camile.dao.model.UserExample" resultMap="BaseResultMap">
     select
@@ -104,26 +104,24 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.camile.dao.model.User">
-    insert into cm_user (uuid, username, password, 
-      name, nickname, age, 
-      brithday, email, phone
-      )
-    values (#{uuid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, #{age,jdbcType=INTEGER}, 
-      #{brithday,jdbcType=DATE}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}
-      )
+    <selectKey keyProperty="uuid" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into cm_user (username, name, nickname, 
+      age, brithday, email, 
+      phone, password)
+    values (#{username,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+      #{age,jdbcType=INTEGER}, #{brithday,jdbcType=DATE}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.camile.dao.model.User">
+    <selectKey keyProperty="uuid" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
     insert into cm_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="uuid != null">
-        uuid,
-      </if>
       <if test="username != null">
         username,
-      </if>
-      <if test="password != null">
-        password,
       </if>
       <if test="name != null">
         name,
@@ -143,16 +141,13 @@
       <if test="phone != null">
         phone,
       </if>
+      <if test="password != null">
+        password,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="uuid != null">
-        #{uuid,jdbcType=VARCHAR},
-      </if>
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -172,6 +167,9 @@
       <if test="phone != null">
         #{phone,jdbcType=VARCHAR},
       </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.camile.dao.model.UserExample" resultType="java.lang.Long">
@@ -188,9 +186,6 @@
       </if>
       <if test="record.username != null">
         username = #{record.username,jdbcType=VARCHAR},
-      </if>
-      <if test="record.password != null">
-        password = #{record.password,jdbcType=VARCHAR},
       </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
@@ -210,6 +205,9 @@
       <if test="record.phone != null">
         phone = #{record.phone,jdbcType=VARCHAR},
       </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -219,13 +217,13 @@
     update cm_user
     set uuid = #{record.uuid,jdbcType=VARCHAR},
       username = #{record.username,jdbcType=VARCHAR},
-      password = #{record.password,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       nickname = #{record.nickname,jdbcType=VARCHAR},
       age = #{record.age,jdbcType=INTEGER},
       brithday = #{record.brithday,jdbcType=DATE},
       email = #{record.email,jdbcType=VARCHAR},
-      phone = #{record.phone,jdbcType=VARCHAR}
+      phone = #{record.phone,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -235,9 +233,6 @@
     <set>
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
@@ -257,19 +252,22 @@
       <if test="phone != null">
         phone = #{phone,jdbcType=VARCHAR},
       </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
     </set>
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.camile.dao.model.User">
     update cm_user
     set username = #{username,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       nickname = #{nickname,jdbcType=VARCHAR},
       age = #{age,jdbcType=INTEGER},
       brithday = #{brithday,jdbcType=DATE},
       email = #{email,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR}
+      phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR}
     where uuid = #{uuid,jdbcType=VARCHAR}
   </update>
   <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />

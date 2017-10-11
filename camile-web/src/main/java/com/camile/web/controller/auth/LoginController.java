@@ -1,4 +1,4 @@
-package com.camile.web.controller;
+package com.camile.web.controller.auth;
 import com.camile.api.UserService;
 import com.camile.common.base.Controller;
 import com.camile.common.base.Response;
@@ -26,7 +26,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-@Api(value = "login", description = "用户认证相关操作！", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@Api(value = "auth", description = "用户认证相关操作！", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class LoginController extends Controller {
     private static Logger _log = LoggerFactory.getLogger(LoginController.class);
 
