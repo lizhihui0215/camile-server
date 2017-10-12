@@ -3,6 +3,7 @@ import com.camile.api.UserService;
 import com.camile.common.base.Controller;
 import com.camile.common.base.Response;
 import com.camile.common.result.LoginResult;
+import com.camile.common.result.Result;
 import com.camile.common.util.RedisUtil;
 import com.camile.dao.model.User;
 import io.swagger.annotations.Api;
@@ -25,10 +26,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+@RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "auth", description = "用户认证相关操作！", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-public class LoginController extends Controller {
-    private static Logger _log = LoggerFactory.getLogger(LoginController.class);
+public class AuthController extends Controller {
+    private static Logger _log = LoggerFactory.getLogger(AuthController.class);
 
     // 全局会话key
     private final static String CAMILE_SERVER_SESSION_ID = "camile-server-session-id";
@@ -40,12 +41,12 @@ public class LoginController extends Controller {
     private final UserService userService;
 
     @Autowired
-    public LoginController(UserService userService) {
+    public AuthController(UserService userService) {
         this.userService = userService;
     }
 
     @ApiOperation(value = "登录")
-    @PostMapping(value = "/auth")
+    @PostMapping(value = "/signin")
     public Response<User> login(@RequestParam String username, @RequestParam String password, @RequestParam boolean remember) {
 
         if (StringUtils.isBlank(username)) return new Response<>(LoginResult.EMPTY_USERNAME);
@@ -82,13 +83,24 @@ public class LoginController extends Controller {
     }
 
     @ApiOperation(value = "退出登录")
-    @GetMapping(value = "/logout")
+    @GetMapping(value = "/signout")
     public Response<Void> logout(HttpServletRequest request) {
         // shiro退出登录
         SecurityUtils.getSubject().logout();
         // 跳回原地址
 
         return new Response<>(LoginResult.SUCCESS(null));
+    }
+
+    @ApiOperation(value = "注册")
+    @PostMapping(value = "/signup")
+    public Response<Void> signup(@RequestBody User user) {
+
+        int count = this.userService.insertSelective(user);
+
+        if (count == 1) return new Response<>(Result.SUCCESS(null));
+
+        return new Response<Void>(Result.FAILED("注册失败！"));
     }
 
 }

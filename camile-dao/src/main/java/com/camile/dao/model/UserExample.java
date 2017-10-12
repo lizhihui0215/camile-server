@@ -145,62 +145,52 @@ public class UserExample implements Serializable {
             return (Criteria) this;
         }
 
-        public Criteria andUuidEqualTo(String value) {
+        public Criteria andUuidEqualTo(Integer value) {
             addCriterion("uuid =", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andUuidNotEqualTo(String value) {
+        public Criteria andUuidNotEqualTo(Integer value) {
             addCriterion("uuid <>", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andUuidGreaterThan(String value) {
+        public Criteria andUuidGreaterThan(Integer value) {
             addCriterion("uuid >", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andUuidGreaterThanOrEqualTo(String value) {
+        public Criteria andUuidGreaterThanOrEqualTo(Integer value) {
             addCriterion("uuid >=", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andUuidLessThan(String value) {
+        public Criteria andUuidLessThan(Integer value) {
             addCriterion("uuid <", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andUuidLessThanOrEqualTo(String value) {
+        public Criteria andUuidLessThanOrEqualTo(Integer value) {
             addCriterion("uuid <=", value, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andUuidLike(String value) {
-            addCriterion("uuid like", value, "uuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUuidNotLike(String value) {
-            addCriterion("uuid not like", value, "uuid");
-            return (Criteria) this;
-        }
-
-        public Criteria andUuidIn(List<String> values) {
+        public Criteria andUuidIn(List<Integer> values) {
             addCriterion("uuid in", values, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andUuidNotIn(List<String> values) {
+        public Criteria andUuidNotIn(List<Integer> values) {
             addCriterion("uuid not in", values, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andUuidBetween(String value1, String value2) {
+        public Criteria andUuidBetween(Integer value1, Integer value2) {
             addCriterion("uuid between", value1, value2, "uuid");
             return (Criteria) this;
         }
 
-        public Criteria andUuidNotBetween(String value1, String value2) {
+        public Criteria andUuidNotBetween(Integer value1, Integer value2) {
             addCriterion("uuid not between", value1, value2, "uuid");
             return (Criteria) this;
         }
@@ -412,66 +402,6 @@ public class UserExample implements Serializable {
 
         public Criteria andNicknameNotBetween(String value1, String value2) {
             addCriterion("nickname not between", value1, value2, "nickname");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeIsNull() {
-            addCriterion("age is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeIsNotNull() {
-            addCriterion("age is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeEqualTo(Integer value) {
-            addCriterion("age =", value, "age");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeNotEqualTo(Integer value) {
-            addCriterion("age <>", value, "age");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeGreaterThan(Integer value) {
-            addCriterion("age >", value, "age");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeGreaterThanOrEqualTo(Integer value) {
-            addCriterion("age >=", value, "age");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeLessThan(Integer value) {
-            addCriterion("age <", value, "age");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeLessThanOrEqualTo(Integer value) {
-            addCriterion("age <=", value, "age");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeIn(List<Integer> values) {
-            addCriterion("age in", values, "age");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeNotIn(List<Integer> values) {
-            addCriterion("age not in", values, "age");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeBetween(Integer value1, Integer value2) {
-            addCriterion("age between", value1, value2, "age");
-            return (Criteria) this;
-        }
-
-        public Criteria andAgeNotBetween(Integer value1, Integer value2) {
-            addCriterion("age not between", value1, value2, "age");
             return (Criteria) this;
         }
 

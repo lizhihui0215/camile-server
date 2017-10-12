@@ -9,7 +9,7 @@ public class User implements Serializable {
      *
      * @mbg.generated
      */
-    private String uuid;
+    private Integer uuid;
 
     /**
      * 用户名
@@ -31,13 +31,6 @@ public class User implements Serializable {
      * @mbg.generated
      */
     private String nickname;
-
-    /**
-     * 年龄
-     *
-     * @mbg.generated
-     */
-    private Integer age;
 
     /**
      * 生日
@@ -69,11 +62,11 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public String getUuid() {
+    public Integer getUuid() {
         return uuid;
     }
 
-    public void setUuid(String uuid) {
+    public void setUuid(Integer uuid) {
         this.uuid = uuid;
     }
 
@@ -99,14 +92,6 @@ public class User implements Serializable {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
     }
 
     public Date getBrithday() {
@@ -151,7 +136,6 @@ public class User implements Serializable {
         sb.append(", username=").append(username);
         sb.append(", name=").append(name);
         sb.append(", nickname=").append(nickname);
-        sb.append(", age=").append(age);
         sb.append(", brithday=").append(brithday);
         sb.append(", email=").append(email);
         sb.append(", phone=").append(phone);
@@ -176,7 +160,6 @@ public class User implements Serializable {
             && (this.getUsername() == null ? other.getUsername() == null : this.getUsername().equals(other.getUsername()))
             && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
             && (this.getNickname() == null ? other.getNickname() == null : this.getNickname().equals(other.getNickname()))
-            && (this.getAge() == null ? other.getAge() == null : this.getAge().equals(other.getAge()))
             && (this.getBrithday() == null ? other.getBrithday() == null : this.getBrithday().equals(other.getBrithday()))
             && (this.getEmail() == null ? other.getEmail() == null : this.getEmail().equals(other.getEmail()))
             && (this.getPhone() == null ? other.getPhone() == null : this.getPhone().equals(other.getPhone()))
@@ -191,7 +174,6 @@ public class User implements Serializable {
         result = prime * result + ((getUsername() == null) ? 0 : getUsername().hashCode());
         result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         result = prime * result + ((getNickname() == null) ? 0 : getNickname().hashCode());
-        result = prime * result + ((getAge() == null) ? 0 : getAge().hashCode());
         result = prime * result + ((getBrithday() == null) ? 0 : getBrithday().hashCode());
         result = prime * result + ((getEmail() == null) ? 0 : getEmail().hashCode());
         result = prime * result + ((getPhone() == null) ? 0 : getPhone().hashCode());
