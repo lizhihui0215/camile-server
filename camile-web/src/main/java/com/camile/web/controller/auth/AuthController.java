@@ -2,7 +2,7 @@ package com.camile.web.controller.auth;
 import com.camile.api.UserService;
 import com.camile.common.base.Controller;
 import com.camile.common.base.Response;
-import com.camile.common.result.LoginResult;
+import com.camile.common.result.AuthResult;
 import com.camile.common.result.Result;
 import com.camile.common.util.RedisUtil;
 import com.camile.dao.model.User;
@@ -49,8 +49,8 @@ public class AuthController extends Controller {
     @PostMapping(value = "/signin")
     public Response<User> login(@RequestParam String username, @RequestParam String password, @RequestParam boolean remember) {
 
-        if (StringUtils.isBlank(username)) return new Response<>(LoginResult.EMPTY_USERNAME);
-        if (StringUtils.isBlank(password)) return new Response<>(LoginResult.EMPTY_PASSWORD);
+        if (StringUtils.isBlank(username)) return new Response<>(AuthResult.EMPTY_USERNAME);
+        if (StringUtils.isBlank(password)) return new Response<>(AuthResult.EMPTY_PASSWORD);
 
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
@@ -64,11 +64,11 @@ public class AuthController extends Controller {
             try {
                 subject.login(usernamePasswordToken);
             }catch (UnknownAccountException e) {
-                return new Response<>(LoginResult.INVALID_USERNAME);
+                return new Response<>(AuthResult.INVALID_USERNAME);
             }catch (IncorrectCredentialsException e) {
-                return new Response<>(LoginResult.INVALID_PASSWORD);
+                return new Response<>(AuthResult.INVALID_PASSWORD);
             }catch (LockedAccountException e) {
-                return new Response<>(LoginResult.INVALID_ACCOUNT);
+                return new Response<>(AuthResult.INVALID_ACCOUNT);
             }
 
             // 全局会话sessionId列表，供会话管理
@@ -79,7 +79,7 @@ public class AuthController extends Controller {
         }
 
         User user = (User) session.getAttribute("user");
-        return new Response<>(LoginResult.SUCCESS(user));
+        return new Response<>(AuthResult.SUCCESS(user));
     }
 
     @ApiOperation(value = "退出登录")
@@ -88,8 +88,7 @@ public class AuthController extends Controller {
         // shiro退出登录
         SecurityUtils.getSubject().logout();
         // 跳回原地址
-
-        return new Response<>(LoginResult.SUCCESS(null));
+        return new Response<>(AuthResult.SUCCESS(null));
     }
 
     @ApiOperation(value = "注册")
@@ -100,7 +99,7 @@ public class AuthController extends Controller {
 
         if (count == 1) return new Response<>(Result.SUCCESS(null));
 
-        return new Response<Void>(Result.FAILED("注册失败！"));
+        return new Response<>(Result.FAILED("注册失败！"));
     }
 
 }

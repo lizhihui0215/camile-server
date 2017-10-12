@@ -1,6 +1,5 @@
 package com.camile.common.base;
 
-import com.camile.common.result.LoginResult;
 import com.camile.common.result.Result;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
