@@ -55,7 +55,7 @@ public class AuthController extends Controller {
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
         String sessionId = session.getId().toString();
-        String hasCode = RedisUtil.get(CAMILE_SERVER_SESSION_ID + "_" + session);
+        String hasCode = RedisUtil.get(CAMILE_SERVER_SESSION_ID + "_" + sessionId);
 
         if (StringUtils.isBlank(hasCode)) {
             UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);

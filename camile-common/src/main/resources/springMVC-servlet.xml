@@ -15,7 +15,8 @@
         http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- 扫描controller -->
-    <context:component-scan base-package="**.*controller"/>
+    <context:component-scan base-package="springfox,**.*controller"/>
+
     <context:annotation-config/>
     <!--<bean id="swagger2Config"-->
           <!--class="springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration"/>-->
@@ -27,7 +28,7 @@
           class="springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration"/>
 
     <!-- 返回ResponseBody响应类型 -->
-    <mvc:annotation-driven conversion-service="conversionService">
+    <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter">
                 <property name="supportedMediaTypes">
@@ -40,15 +41,6 @@
             <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter" />
         </mvc:message-converters>
     </mvc:annotation-driven>
-
-    <bean id="conversionService"
-          class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
-        <property name="converters">
-            <list>
-                <!-- <bean class="com.ll.model.StringToPersonConverter" /> -->
-            </list>
-        </property>
-    </bean>
 
     <!-- i18n国际化 -->
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
@@ -66,8 +58,8 @@
     </bean>
 
     <!-- 配置静态资源，不被DispatcherServlet处理，增加缓存时间10秒 -->
-    <mvc:resources mapping="/favicon.ico" location="/favicon.ico"/>
-    <mvc:resources mapping="/resources/**" location="/resources/" cache-period="10"/>
+    <!--<mvc:resources mapping="/favicon.ico" location="/favicon.ico"/>-->
+    <!--<mvc:resources mapping="/resources/**" location="/resources/" cache-period="10"/>-->
     <mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
     <mvc:resources mapping="/swagger-ui.html" location="classpath:/META-INF/resources/"/>
 
