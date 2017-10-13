@@ -3,7 +3,7 @@
 <generatorConfiguration>
 
     <!-- 配置文件 -->
-    <properties resource="generator.properties"></properties>
+    <properties resource="generator.properties" />
 
     <context id="MysqlContext" targetRuntime="MyBatis3" defaultModelType="flat">
 
@@ -13,7 +13,7 @@
         <property name="endingDelimiter" value="`"/>
 
         <!-- 为生成的Java模型创建一个toString方法 -->
-        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
 
         <!-- 为生成的Java模型类添加序列化接口，并生成serialVersionUID字段 -->
         <plugin type="com.camile.common.plugin.SerializablePlugin">
@@ -37,7 +37,7 @@
         </plugin>
 
         <!-- Java模型生成equals和hashcode方法 -->
-        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"></plugin>
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
 
         <!-- 生成的代码去掉注释 -->
         <commentGenerator type="com.camile.common.plugin.CommentGenerator">
