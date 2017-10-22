@@ -4,7 +4,6 @@ import com.camile.common.base.Controller;
 import com.camile.common.base.Response;
 import com.camile.common.result.AuthResult;
 import com.camile.common.result.Result;
-import com.camile.common.util.RedisUtil;
 import com.camile.dao.model.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +13,8 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -23,20 +24,13 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.UUID;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 @Api(value = "auth", description = "用户认证相关操作！", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class AuthController extends Controller {
     private static Logger _log = LoggerFactory.getLogger(AuthController.class);
-
-    // 全局会话key
-    private final static String CAMILE_SERVER_SESSION_ID = "camile-server-session-id";
-    // 全局会话key列表
-    private final static String CAMILE_SERVER_SESSION_IDS = "camile-server-session-ids";
-    // code key
-    private final static String CAMILE_SERVER_CODE = "camile-server-code";
 
     private final UserService userService;
 
@@ -47,58 +41,66 @@ public class AuthController extends Controller {
 
     @ApiOperation(value = "登录")
     @PostMapping(value = "/signin")
-    public Response<User> login(@RequestParam String username, @RequestParam String password, @RequestParam boolean remember) {
+    public Response<User> login(@RequestParam String username, @RequestParam String password, @RequestParam boolean rememberMe) {
 
         if (StringUtils.isBlank(username)) return new Response<>(AuthResult.EMPTY_USERNAME);
         if (StringUtils.isBlank(password)) return new Response<>(AuthResult.EMPTY_PASSWORD);
 
         Subject subject = SecurityUtils.getSubject();
         Session session = subject.getSession();
-        String sessionId = session.getId().toString();
-        String hasCode = RedisUtil.get(CAMILE_SERVER_SESSION_ID + "_" + sessionId);
 
-        if (StringUtils.isBlank(hasCode)) {
-            UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
-            usernamePasswordToken.setRememberMe(remember);
+        if (subject.isAuthenticated()) {
+            User user = (User) session.getAttribute("user");
+            return new Response<>(AuthResult.SUCCESS(user));
+        }
 
-            try {
-                subject.login(usernamePasswordToken);
-            }catch (UnknownAccountException e) {
-                return new Response<>(AuthResult.INVALID_USERNAME);
-            }catch (IncorrectCredentialsException e) {
-                return new Response<>(AuthResult.INVALID_PASSWORD);
-            }catch (LockedAccountException e) {
-                return new Response<>(AuthResult.INVALID_ACCOUNT);
-            }
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username, password);
+        usernamePasswordToken.setRememberMe(rememberMe);
 
-            // 全局会话sessionId列表，供会话管理
-            RedisUtil.lpush(CAMILE_SERVER_SESSION_IDS, sessionId);
-
-            String code = UUID.randomUUID().toString();
-            RedisUtil.set(CAMILE_SERVER_SESSION_ID + "_" + sessionId, code, (int) subject.getSession().getTimeout() / 1000);
+        try {
+            subject.login(usernamePasswordToken);
+        }catch (UnknownAccountException e) {
+            return new Response<>(AuthResult.INVALID_USERNAME);
+        }catch (IncorrectCredentialsException e) {
+            return new Response<>(AuthResult.INVALID_PASSWORD);
+        }catch (LockedAccountException e) {
+            return new Response<>(AuthResult.INVALID_ACCOUNT);
         }
 
         User user = (User) session.getAttribute("user");
         return new Response<>(AuthResult.SUCCESS(user));
     }
 
+
+    @ApiOperation(value = "是否认登录")
+    @GetMapping(value = "/isAuthenticated")
+    public Response<Boolean> isAuthenticated() {
+        Subject subject = SecurityUtils.getSubject();
+
+        User user = (User) subject.getSession().getAttribute("user");
+
+        if (subject.isRemembered() && user == null) {
+            user = userService.selectByUsername(String.valueOf(subject.getPrincipal()));
+            subject.getSession().setAttribute("user", user);
+        }
+
+        return new Response<>(AuthResult.SUCCESS(subject.isAuthenticated() || subject.isRemembered()));
+    }
+
     @ApiOperation(value = "退出登录")
     @GetMapping(value = "/signout")
+    @RequiresUser
     public Response<Void> logout(HttpServletRequest request) {
         // shiro退出登录
         SecurityUtils.getSubject().logout();
-        // 跳回原地址
         return new Response<>(AuthResult.SUCCESS(null));
     }
 
     @ApiOperation(value = "注册")
     @PostMapping(value = "/signup")
     public Response<Void> signup(@RequestBody User user) {
-
         int count = this.userService.insertSelective(user);
-
         if (count == 1) return new Response<>(Result.SUCCESS(null));
-
         return new Response<>(Result.FAILED("注册失败！"));
     }
 

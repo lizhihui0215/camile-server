@@ -13,7 +13,7 @@
         <property name="endingDelimiter" value="`"/>
 
         <!-- 为生成的Java模型创建一个toString方法 -->
-        <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.ToStringPlugin" />
 
         <!-- 为生成的Java模型类添加序列化接口，并生成serialVersionUID字段 -->
         <plugin type="com.camile.common.plugin.SerializablePlugin">
@@ -37,7 +37,7 @@
         </plugin>
 
         <!-- Java模型生成equals和hashcode方法 -->
-        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"/>
+        <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
 
         <!-- 生成的代码去掉注释 -->
         <commentGenerator type="com.camile.common.plugin.CommentGenerator">
@@ -61,8 +61,20 @@
         <javaClientGenerator targetPackage="com.camile.dao.mapper" targetProject="/Users/lizhihui/Workspace/camile-server/camile-dao/src/main/java" type="XMLMAPPER" />
 
         <!-- 需要映射的表 -->
-                                    <table tableName="cm_user" domainObjectName="User">
-                    <generatedKey column="uuid" sqlStatement="MySql" identity="true"/>
+                                    <table tableName="permission" domainObjectName="Permission">
+                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+                </table>
+                                                <table tableName="role" domainObjectName="Role">
+                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+                </table>
+                                                <table tableName="role_permission" domainObjectName="RolePermission">
+                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+                </table>
+                                                <table tableName="user" domainObjectName="User">
+                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+                </table>
+                                                <table tableName="user_role" domainObjectName="UserRole">
+                    <generatedKey column="id" sqlStatement="MySql" identity="true"/>
                 </table>
                         </context>
 </generatorConfiguration>

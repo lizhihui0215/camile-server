@@ -16,7 +16,7 @@ public class Generator {
 	private static String ROOT_MODULE = "camile-server";
 	private static String MODULE = "camile";
 	private static String DATABASE = "camile";
-	private static String TABLE_PREFIX = "cm_";
+	private static String TABLE_PREFIX = "";
 	private static String PACKAGE_NAME = "com.camile";
 	private static String JDBC_DRIVER = PropertiesFileUtil.getInstance("generator").get("generator.jdbc.driver");
 	private static String JDBC_URL = PropertiesFileUtil.getInstance("generator").get("generator.jdbc.url");
@@ -25,7 +25,11 @@ public class Generator {
 	// 需要insert后返回主键的表配置，key:表名,value:主键名
 	private static Map<String, String> LAST_INSERT_ID_TABLES = new HashMap<>();
 	static {
-        LAST_INSERT_ID_TABLES.put("cm_user", "uuid");
+        LAST_INSERT_ID_TABLES.put("user", "id");
+		LAST_INSERT_ID_TABLES.put("role", "id");
+		LAST_INSERT_ID_TABLES.put("role_permission", "id");
+		LAST_INSERT_ID_TABLES.put("user_role", "id");
+		LAST_INSERT_ID_TABLES.put("permission", "id");
 	}
 
 	/**

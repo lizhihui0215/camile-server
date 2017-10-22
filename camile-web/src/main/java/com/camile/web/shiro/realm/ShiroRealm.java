@@ -1,6 +1,11 @@
 package com.camile.web.shiro.realm;
 
+import com.camile.api.PermissionService;
+import com.camile.api.RoleService;
 import com.camile.api.UserService;
+import com.camile.dao.model.Permission;
+import com.camile.dao.model.Role;
+import com.camile.dao.model.RoleExample;
 import com.camile.dao.model.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -12,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 /**
  * Created by lizhihui on 01/10/2017.
  */
@@ -20,16 +27,40 @@ public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private RoleService roleService;
+    @Autowired
+    private PermissionService permissionService;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        return new SimpleAuthorizationInfo();
+        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+        String username = String.valueOf(principals.getPrimaryPrincipal());
+
+        final User user = userService.selectByUsername(username);
+
+        final List<Role> roleInfos = roleService.selectRolesByUserId(user.getId());
+        for (Role role : roleInfos) {
+            // 添加角色
+            _log.debug("%s add { %s }",user.getUsername(),role);
+
+            authorizationInfo.addRole(role.getRoleSign());
+
+            final List<Permission> permissions = permissionService.selectPermissionsByRoleId(role.getId());
+            for (Permission permission : permissions) {
+                // 添加权限
+                System.err.println(permission);
+                _log.debug("%s add { %s }",user.getUsername(),permission);
+                authorizationInfo.addStringPermission(permission.getPermissionSign());
+            }
+        }
+        return authorizationInfo;
     }
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        String username = (String) token.getPrincipal();
-        String password = new String((char[]) token.getCredentials());
+        String username = String.valueOf(token.getPrincipal());
+        String password = String.valueOf((char[])token.getCredentials());
 
         User user = userService.selectByUsername(username);
 

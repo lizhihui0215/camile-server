@@ -59,7 +59,7 @@ public class MybatisGeneratorUtil {
         String basePath = MybatisGeneratorUtil.class.getResource("/").getPath().replace("/target/classes/", "").replace(targetProject, "");//.replaceFirst("/", "");
         String generatorConfig_xml = MybatisGeneratorUtil.class.getResource("/").getPath().replace("/target/classes/", "") + "/src/main/resources/generatorConfig.xml";
         targetProject = basePath + targetProject;
-        String sql = "SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '" + database + "' AND table_name LIKE '" + table_prefix + "_%';";
+        String sql = "SELECT table_name FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '" + database + "' AND table_name LIKE '" + table_prefix + "%';";
 
         System.out.println("========== 开始生成generatorConfig.xml文件 ==========");
         List<Map<String, Object>> tables = new ArrayList<>();

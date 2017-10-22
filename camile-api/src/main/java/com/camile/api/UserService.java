@@ -6,7 +6,7 @@ import com.camile.dao.model.UserExample;
 
 /**
 * UserService接口
-* Created by lizhihui on 2017/10/1.
+* Created by lizhihui on 2017/10/21.
 */
 public interface UserService extends Service<User, UserExample> {
 

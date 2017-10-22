@@ -2,14 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.camile.dao.mapper.UserMapper">
   <resultMap id="BaseResultMap" type="com.camile.dao.model.User">
-    <id column="uuid" jdbcType="INTEGER" property="uuid" />
+    <id column="id" jdbcType="BIGINT" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="brithday" jdbcType="DATE" property="brithday" />
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="state" jdbcType="VARCHAR" property="state" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -70,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    uuid, username, name, nickname, brithday, email, phone, password
+    id, username, password, name, nickname, brithday, email, phone, state, create_time
   </sql>
   <select id="selectByExample" parameterType="com.camile.dao.model.UserExample" resultMap="BaseResultMap">
     select
@@ -78,7 +80,7 @@
       distinct
     </if>
     <include refid="Base_Column_List" />
-    from cm_user
+    from user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -86,41 +88,46 @@
       order by ${orderByClause}
     </if>
   </select>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from cm_user
-    where uuid = #{uuid,jdbcType=INTEGER}
+    from user
+    where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from cm_user
-    where uuid = #{uuid,jdbcType=INTEGER}
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from user
+    where id = #{id,jdbcType=BIGINT}
   </delete>
   <delete id="deleteByExample" parameterType="com.camile.dao.model.UserExample">
-    delete from cm_user
+    delete from user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
   <insert id="insert" parameterType="com.camile.dao.model.User">
-    <selectKey keyProperty="uuid" order="AFTER" resultType="java.lang.Integer">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into cm_user (username, name, nickname, 
-      brithday, email, phone, 
-      password)
-    values (#{username,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
-      #{brithday,jdbcType=DATE}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{password,jdbcType=VARCHAR})
+    insert into user (username, password, name, 
+      nickname, brithday, email, 
+      phone, state, create_time
+      )
+    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{nickname,jdbcType=VARCHAR}, #{brithday,jdbcType=DATE}, #{email,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{state,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.camile.dao.model.User">
-    <selectKey keyProperty="uuid" order="AFTER" resultType="java.lang.Integer">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into cm_user
+    insert into user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="username != null">
         username,
+      </if>
+      <if test="password != null">
+        password,
       </if>
       <if test="name != null">
         name,
@@ -137,13 +144,19 @@
       <if test="phone != null">
         phone,
       </if>
-      <if test="password != null">
-        password,
+      <if test="state != null">
+        state,
+      </if>
+      <if test="createTime != null">
+        create_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="username != null">
         #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -160,25 +173,31 @@
       <if test="phone != null">
         #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
+      <if test="state != null">
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
   <select id="countByExample" parameterType="com.camile.dao.model.UserExample" resultType="java.lang.Long">
-    select count(*) from cm_user
+    select count(*) from user
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update cm_user
+    update user
     <set>
-      <if test="record.uuid != null">
-        uuid = #{record.uuid,jdbcType=INTEGER},
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
       </if>
       <if test="record.username != null">
         username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null">
+        password = #{record.password,jdbcType=VARCHAR},
       </if>
       <if test="record.name != null">
         name = #{record.name,jdbcType=VARCHAR},
@@ -195,8 +214,11 @@
       <if test="record.phone != null">
         phone = #{record.phone,jdbcType=VARCHAR},
       </if>
-      <if test="record.password != null">
-        password = #{record.password,jdbcType=VARCHAR},
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     <if test="_parameter != null">
@@ -204,24 +226,29 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update cm_user
-    set uuid = #{record.uuid,jdbcType=INTEGER},
+    update user
+    set id = #{record.id,jdbcType=BIGINT},
       username = #{record.username,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
       name = #{record.name,jdbcType=VARCHAR},
       nickname = #{record.nickname,jdbcType=VARCHAR},
       brithday = #{record.brithday,jdbcType=DATE},
       email = #{record.email,jdbcType=VARCHAR},
       phone = #{record.phone,jdbcType=VARCHAR},
-      password = #{record.password,jdbcType=VARCHAR}
+      state = #{record.state,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
   <update id="updateByPrimaryKeySelective" parameterType="com.camile.dao.model.User">
-    update cm_user
+    update user
     <set>
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
@@ -238,22 +265,27 @@
       <if test="phone != null">
         phone = #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
+      <if test="state != null">
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
     </set>
-    where uuid = #{uuid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.camile.dao.model.User">
-    update cm_user
+    update user
     set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       nickname = #{nickname,jdbcType=VARCHAR},
       brithday = #{brithday,jdbcType=DATE},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR}
-    where uuid = #{uuid,jdbcType=INTEGER}
+      state = #{state,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
   </update>
   <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
 </mapper>
