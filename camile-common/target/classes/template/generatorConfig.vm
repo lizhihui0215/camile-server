@@ -40,9 +40,10 @@
         <plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin" />
 
         <!-- 生成的代码去掉注释 -->
-        <commentGenerator type="com.camile.common.plugin.CommentGenerator">
-            <property name="suppressAllComments" value="true" />
-            <property name="suppressDate" value="true"/>
+        <commentGenerator type="org.mybatis.generator.internal.DefaultCommentGenerator">
+            <property name="suppressAllComments" value="false" />
+            <property name="suppressDate" value="false"/>
+            <property name="addRemarkComments" value="true"/>
         </commentGenerator>
 
         <!-- 数据库连接 -->
@@ -63,9 +64,15 @@
         <!-- 需要映射的表 -->
         #foreach($table in $tables)
             #if($last_insert_id_tables.containsKey($!table.table_name) == true)
-                <table tableName="$!table.table_name" domainObjectName="$!table.model_name">
-                    <generatedKey column="$!last_insert_id_tables.get($!table.table_name)" sqlStatement="MySql" identity="true"/>
-                </table>
+                #if($alias_of_tables.containsKey($!table.table_name) == true)
+                    <table tableName="$!table.table_name" domainObjectName="$!table.model_name" alias="$!alias_of_tables.get($!table.table_name)">
+                        <generatedKey column="$!last_insert_id_tables.get($!table.table_name)" sqlStatement="MySql" identity="true"/>
+                    </table>
+                #else
+                    <table tableName="$!table.table_name" domainObjectName="$!table.model_name">
+                        <generatedKey column="$!last_insert_id_tables.get($!table.table_name)" sqlStatement="MySql" identity="true"/>
+                    </table>
+                #end
             #else
                 <table tableName="$!table.table_name" domainObjectName="$!table.model_name"></table>
             #end

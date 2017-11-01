@@ -24,12 +24,19 @@ public class Generator {
 	private static String JDBC_PASSWORD = PropertiesFileUtil.getInstance("generator").get("generator.jdbc.password");
 	// 需要insert后返回主键的表配置，key:表名,value:主键名
 	private static Map<String, String> LAST_INSERT_ID_TABLES = new HashMap<>();
+	private static Map<String, String> ALIAS_OF_TABLES = new HashMap<>();
+
 	static {
         LAST_INSERT_ID_TABLES.put("user", "id");
+		ALIAS_OF_TABLES.put("user", "user");
 		LAST_INSERT_ID_TABLES.put("role", "id");
+		ALIAS_OF_TABLES.put("role", "role");
 		LAST_INSERT_ID_TABLES.put("role_permission", "id");
+		ALIAS_OF_TABLES.put("role_permission", "role_pm");
 		LAST_INSERT_ID_TABLES.put("user_role", "id");
+		ALIAS_OF_TABLES.put("user_role", "user_r");
 		LAST_INSERT_ID_TABLES.put("permission", "id");
+		ALIAS_OF_TABLES.put("permission", "pm");
 	}
 
 	/**
@@ -37,7 +44,9 @@ public class Generator {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		MybatisGeneratorUtil.generator(JDBC_DRIVER, JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD, ROOT_MODULE, MODULE, DATABASE, TABLE_PREFIX, PACKAGE_NAME, LAST_INSERT_ID_TABLES, false);
+		MybatisGeneratorUtil.generator(JDBC_DRIVER, JDBC_URL, JDBC_USERNAME, JDBC_PASSWORD, ROOT_MODULE, MODULE, DATABASE, TABLE_PREFIX, PACKAGE_NAME, LAST_INSERT_ID_TABLES, ALIAS_OF_TABLES, false);
 	}
+
+
 
 }

@@ -35,7 +35,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User, UserExample> 
 
     @Override
     public User selectByUsername(String username) {
+
+
         UserExample userExample = new UserExample();
+        User user = userMapper.selectUserAndRolesAndPermissionByExample(userExample);
+
 
         userExample.createCriteria().andUsernameEqualTo(username);
 

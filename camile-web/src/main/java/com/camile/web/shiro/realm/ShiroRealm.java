@@ -49,7 +49,6 @@ public class ShiroRealm extends AuthorizingRealm {
             final List<Permission> permissions = permissionService.selectPermissionsByRoleId(role.getId());
             for (Permission permission : permissions) {
                 // 添加权限
-                System.err.println(permission);
                 _log.debug("%s add { %s }",user.getUsername(),permission);
                 authorizationInfo.addStringPermission(permission.getPermissionSign());
             }

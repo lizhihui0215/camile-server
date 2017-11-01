@@ -48,6 +48,7 @@ public class MybatisGeneratorUtil {
             String table_prefix,
             String package_name,
             Map<String, String> last_insert_id_tables,
+            Map<String, String> alias_of_tables,
             boolean isIncludeTablePrifix) throws Exception{
 
         generatorConfig_vm = MybatisGeneratorUtil.class.getResource(generatorConfig_vm).getPath();//.replaceFirst("/", "");
@@ -90,11 +91,12 @@ public class MybatisGeneratorUtil {
             context.put("targetProject_sqlMap", targetProject_sqlMap);
             context.put("generator_jdbc_password", jdbc_password);
             context.put("last_insert_id_tables", last_insert_id_tables);
+            context.put("alias_of_tables", alias_of_tables);
             VelocityUtil.generate(generatorConfig_vm, generatorConfig_xml, context);
             // 删除旧代码
             deleteDir(new File(targetProject + "/src/main/java/" + package_name.replaceAll("\\.", "/") + "/dao/model"));
-            deleteDir(new File(targetProject + "/src/main/java/" + package_name.replaceAll("\\.", "/") + "/dao/mapper"));
-            deleteDir(new File(targetProject_sqlMap + "/src/main/java/" + package_name.replaceAll("\\.", "/") + "/dao/mapper"));
+//            deleteDir(new File(targetProject + "/src/main/java/" + package_name.replaceAll("\\.", "/") + "/dao/mapper"));
+//            deleteDir(new File(targetProject_sqlMap + "/src/main/java/" + package_name.replaceAll("\\.", "/") + "/dao/mapper"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -105,7 +107,7 @@ public class MybatisGeneratorUtil {
         File configFile = new File(generatorConfig_xml);
         ConfigurationParser cp = new ConfigurationParser(warnings);
         Configuration config = cp.parseConfiguration(configFile);
-        DefaultShellCallback callback = new DefaultShellCallback(true);
+        DefaultShellCallback callback = new DefaultShellCallback(false);
         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
         myBatisGenerator.generate(null);
         for (String warning : warnings) {

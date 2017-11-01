@@ -288,4 +288,22 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   <cache type="org.mybatis.caches.ehcache.LoggingEhcache" />
+
+  <select id="selectUserAndRolesAndPermissionByExample" parameterType="com.camile.dao.model.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />,
+    <include refid="com.camile.dao.mapper.RoleMapper.Base_Column_List" />,
+    role.id as 'role.id'
+    from user
+    left join role on role.user_id = id
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
 </mapper>
