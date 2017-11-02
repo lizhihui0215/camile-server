@@ -5,6 +5,7 @@ import com.camile.common.base.Response;
 import com.camile.common.result.AuthResult;
 import com.camile.common.result.Result;
 import com.camile.dao.model.Role;
+import com.camile.dao.model.RoleExample;
 import com.camile.dao.model.User;
 import com.camile.web.controller.auth.AuthController;
 import io.swagger.annotations.Api;
@@ -48,8 +49,8 @@ public class RoleController {
     @GetMapping(value = "/roles")
     @RequiresRoles("admin")
     public Response<List<Role>> roles() {
-        List<Role> roles = this.roleService.selectByExample(null);
-        return new Response<List<Role>>(Result.SUCCESS(roles));
+        List<Role> roles = this.roleService.selectByExample(new RoleExample());
+        return new Response<>(Result.SUCCESS(roles));
     }
 
 }

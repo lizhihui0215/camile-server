@@ -35,18 +35,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User, UserExample> 
 
     @Override
     public User selectByUsername(String username) {
-
-
         UserExample userExample = new UserExample();
-        User user = userMapper.selectUserAndRolesAndPermissionByExample(userExample);
-
-
         userExample.createCriteria().andUsernameEqualTo(username);
+        return userMapper.selectUserAndRolesAndPermissionByExample(userExample);
+    }
 
-        List<User> users = userMapper.selectByExample(userExample);
-
-        if (CollectionUtils.isEmpty(users)) return null;
-
-        return users.get(0);
+    @Override
+    public List<User> selectByRoleId(String roleId) {
+        return userMapper.selectByRoleId(roleId);
     }
 }

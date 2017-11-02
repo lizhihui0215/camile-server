@@ -12,5 +12,4 @@ import java.util.List;
 */
 public interface RoleService extends Service<Role, RoleExample> {
 
-    List<Role> selectRolesByUserId(Long id);
 }

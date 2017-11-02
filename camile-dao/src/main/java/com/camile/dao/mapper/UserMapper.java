@@ -95,4 +95,6 @@ public interface UserMapper {
     int updateByPrimaryKey(User record);
 
     User selectUserAndRolesAndPermissionByExample(UserExample userExample);
+
+    List<User> selectByRoleId(@Param("roleId") String roleId);
 }

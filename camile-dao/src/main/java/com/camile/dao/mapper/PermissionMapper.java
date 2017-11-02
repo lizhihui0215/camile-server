@@ -93,4 +93,6 @@ public interface PermissionMapper {
      * @mbg.generated Thu Nov 02 01:13:33 CST 2017
      */
     int updateByPrimaryKey(Permission record);
+
+    List<Permission> selectPermissionsByRoleId(@Param("id") Long id);
 }

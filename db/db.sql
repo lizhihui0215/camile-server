@@ -62,5 +62,5 @@ create table user_role
 insert  into `permission`(`id`,`permission_name`,`permission_sign`,`description`) values (1,'用户新增','user:create',NULL);
 insert  into `role`(`id`,`role_name`,`role_sign`,`description`) values (1,'admin','admin','管理员');
 insert  into `role_permission`(`id`,`role_id`,`permission_id`) values (1,2,1);
-insert  into `user`(`id`,`username`,`password`,`state`,`create_time`) values (1,'starzou','8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92',NULL,'2014-07-17 12:59:08');
+INSERT INTO user (id, username, password, name, nickname, brithday, email, phone, state, create_time) VALUES (1,'lizhihui0215','dsn4cgwy','李智慧', 'just', now(),'lizhihui0215@gmail.com','18710427678','1', now());
 insert  into `user_role`(`id`,`user_id`,`role_id`) values (1,1,1);

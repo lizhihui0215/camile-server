@@ -39,7 +39,7 @@ public class ShiroRealm extends AuthorizingRealm {
 
         final User user = userService.selectByUsername(username);
 
-        final List<Role> roleInfos = roleService.selectRolesByUserId(user.getId());
+        final List<Role> roleInfos = user.getRoles();
         for (Role role : roleInfos) {
             // 添加角色
             _log.debug("%s add { %s }",user.getUsername(),role);

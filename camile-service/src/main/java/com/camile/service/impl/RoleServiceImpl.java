@@ -32,8 +32,4 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role, RoleExample> 
         this.roleMapper = roleMapper;
     }
 
-    @Override
-    public List<Role> selectRolesByUserId(Long id) {
-        return roleMapper.selectRolesByUserId(id);
-    }
 }
