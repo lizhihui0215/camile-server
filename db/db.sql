@@ -1,3 +1,4 @@
+drop table if exists permission;
 create table permission
 (
   id bigint not null auto_increment comment '权限id'
@@ -8,7 +9,7 @@ create table permission
 )
   comment '权限表'
 ;
-
+drop table if exists role;
 create table role
 (
   id bigint not null auto_increment comment '角色id'
@@ -20,6 +21,7 @@ create table role
   comment '角色表'
 ;
 
+drop table if exists role_permission;
 create table role_permission
 (
   id bigint not null auto_increment comment '表id'
@@ -30,6 +32,7 @@ create table role_permission
   comment '角色与权限关联表'
 ;
 
+drop table if exists user;
 create table user
 (
   id bigint not null auto_increment comment '用户id'
@@ -42,6 +45,7 @@ create table user
   email varchar(255) not null comment '邮件',
   phone varchar(255) not null comment '电话',
   state varchar(32) null comment '状态',
+  address varchar(255) null comment '家庭住址',
   create_time datetime null comment '创建时间',
   constraint user_username_uindex
   unique (username)
@@ -49,6 +53,7 @@ create table user
   comment '用户表'
 ;
 
+drop table if exists user_role;
 create table user_role
 (
   id bigint not null auto_increment comment '表id'
