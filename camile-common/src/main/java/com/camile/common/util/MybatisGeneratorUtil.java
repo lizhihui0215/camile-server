@@ -107,7 +107,7 @@ public class MybatisGeneratorUtil {
         File configFile = new File(generatorConfig_xml);
         ConfigurationParser cp = new ConfigurationParser(warnings);
         Configuration config = cp.parseConfiguration(configFile);
-        DefaultShellCallback callback = new DefaultShellCallback(false);
+        CamileShellCallback callback = new CamileShellCallback(true);
         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
         myBatisGenerator.generate(null);
         for (String warning : warnings) {
