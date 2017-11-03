@@ -4,9 +4,11 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.mybatis.generator.api.MyBatisGenerator;
+import org.mybatis.generator.api.VerboseProgressCallback;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
+import org.springframework.cglib.core.ProcessArrayCallback;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -107,9 +109,13 @@ public class MybatisGeneratorUtil {
         File configFile = new File(generatorConfig_xml);
         ConfigurationParser cp = new ConfigurationParser(warnings);
         Configuration config = cp.parseConfiguration(configFile);
-        CamileShellCallback callback = new CamileShellCallback(true);
+        CamileShellCallback callback = new CamileShellCallback(false);
         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, callback, warnings);
-        myBatisGenerator.generate(null);
+        VerboseProgressCallback processArrayCallback = new VerboseProgressCallback();
+
+
+
+        myBatisGenerator.generate(processArrayCallback);
         for (String warning : warnings) {
             System.out.println(warning);
         }

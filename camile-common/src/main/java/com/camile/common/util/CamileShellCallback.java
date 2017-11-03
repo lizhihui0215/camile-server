@@ -27,11 +27,11 @@ public class CamileShellCallback extends DefaultShellCallback {
      *
      * @param overwrite the overwrite
      */
-    public CamileShellCallback(boolean overwrite) {
+    CamileShellCallback(boolean overwrite) {
         super(overwrite);
     }
 
-    public String getNewJavaFile(String newFileSource, String existingFileFullPath)  {
+    private String getNewJavaFile(String newFileSource, String existingFileFullPath)  {
         CompilationUnit newCompilationUnit = JavaParser.parse(newFileSource);
         CompilationUnit existingCompilationUnit = null;
         try {
@@ -42,7 +42,7 @@ public class CamileShellCallback extends DefaultShellCallback {
         return mergerFile(newCompilationUnit,existingCompilationUnit);
     }
 
-    public String mergerFile(CompilationUnit newCompilationUnit,CompilationUnit existingCompilationUnit){
+    private String mergerFile(CompilationUnit newCompilationUnit, CompilationUnit existingCompilationUnit){
 
         StringBuilder sb = new StringBuilder(newCompilationUnit.getPackageDeclaration().get().toString());
         newCompilationUnit.removePackageDeclaration();
@@ -117,6 +117,11 @@ public class CamileShellCallback extends DefaultShellCallback {
         }
 
         return sb.append(System.getProperty("line.separator")+"}").toString();
+    }
+
+    @Override
+    public boolean isMergeSupported() {
+        return true;
     }
 
     @Override
