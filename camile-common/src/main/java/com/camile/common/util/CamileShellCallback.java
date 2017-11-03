@@ -8,17 +8,16 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.FieldDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.google.common.collect.Lists;
 import org.mybatis.generator.config.MergeConstants;
 import org.mybatis.generator.exception.ShellException;
 import org.mybatis.generator.internal.DefaultShellCallback;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import static org.mybatis.generator.api.dom.OutputUtilities.javaIndent;
 import static org.mybatis.generator.api.dom.OutputUtilities.newLine;
 
 public class CamileShellCallback extends DefaultShellCallback {
@@ -42,6 +41,17 @@ public class CamileShellCallback extends DefaultShellCallback {
         return mergerFile(newCompilationUnit,existingCompilationUnit);
     }
 
+    private boolean containtsFields(List<FieldDeclaration> fields, FieldDeclaration theField) {
+        boolean isContains = false;
+        for (FieldDeclaration field :fields) {
+            String s = field.getVariables().get(0).getName().getIdentifier();
+            String q = theField.getVariables().get(0).getName().getIdentifier();
+            if (s.equals(q)) isContains = true;
+        }
+
+        return isContains;
+    }
+
     private String mergerFile(CompilationUnit newCompilationUnit, CompilationUnit existingCompilationUnit){
 
         StringBuilder sb = new StringBuilder(newCompilationUnit.getPackageDeclaration().get().toString());
@@ -50,7 +60,7 @@ public class CamileShellCallback extends DefaultShellCallback {
         //合并imports
         NodeList<ImportDeclaration> imports = newCompilationUnit.getImports();
         imports.addAll(existingCompilationUnit.getImports());
-        Set importSet = new HashSet<ImportDeclaration>();
+        Set<ImportDeclaration> importSet = new HashSet<ImportDeclaration>();
         importSet.addAll(imports);
 
         NodeList<ImportDeclaration> newImports = new NodeList<>();
@@ -72,15 +82,28 @@ public class CamileShellCallback extends DefaultShellCallback {
             //合并fields
             List<FieldDeclaration> fields = types.get(i).getFields();
             List<FieldDeclaration> oldFields = oldTypes.get(i).getFields();
-            List<FieldDeclaration> newFields = new ArrayList<>();
-            HashSet<FieldDeclaration> fieldDeclarations = new HashSet<>();
-            fieldDeclarations.addAll(fields);
-            fieldDeclarations.addAll(oldFields);
-            newFields.addAll(fieldDeclarations);
-            for (FieldDeclaration f: newFields){
+
+            for (FieldDeclaration f: fields){
+                javaIndent(sb, 1);
                 sb.append(f.toString());
                 newLine(sb);
                 newLine(sb);
+            }
+
+            for (FieldDeclaration f: oldFields){
+                boolean flag = true;
+                for (String tag : MergeConstants.OLD_ELEMENT_TAGS) {
+                    if (f.toString().contains(tag)) {
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag){
+                    javaIndent(sb, 1);
+                    sb.append(f.toString());
+                    newLine(sb);
+                    newLine(sb);
+                }
             }
 
             //合并methods
@@ -116,7 +139,7 @@ public class CamileShellCallback extends DefaultShellCallback {
 
         }
 
-        return sb.append(System.getProperty("line.separator")+"}").toString();
+        return sb.append(System.getProperty("line.separator")).append("}").toString();
     }
 
     @Override
