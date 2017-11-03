@@ -76,6 +76,9 @@ public class CamileShellCallback extends DefaultShellCallback {
         for (int i = 0;i<types.size();i++) {
             //截取Class
             String classNameInfo = types.get(i).toString().substring(0, types.get(i).toString().indexOf("{")+1);
+            TypeDeclaration<?> typeDeclaration = types.get(i);
+
+
             sb.append(classNameInfo);
             newLine(sb);
             newLine(sb);
@@ -136,8 +139,9 @@ public class CamileShellCallback extends DefaultShellCallback {
                     sb.append(n.toString());
                 }
             }
-
         }
+
+
 
         return sb.append(System.getProperty("line.separator")).append("}").toString();
     }
